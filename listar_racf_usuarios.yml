@@ -3,25 +3,15 @@
   hosts: zos_servers # Asegúrate de que este grupo/host exista en tu inventario de AWX
   gather_facts: false # Recomendado para z/OS
 
-  tasks:
+  tasks:               # <--- This line is offending, likely due to indentation
     - name: Obtener información de todos los usuarios de RACF
       ibm.ibm_zos_core.zos_user:
-        name: "*" # El asterisco indica que liste todos los usuarios
-        state: present # Aunque "present" es para asegurar que existan, con name="*" actúa como filtro para listar
-        # filter: # Puedes añadir filtros si quieres buscar patrones específicos
-        #   - 'TSO*'
-        # category: # Puedes filtrar por categorías (ej. 'USER')
-        #   - 'USER'
-        # attributes: # Puedes filtrar por atributos (ej. 'PASSWORD')
-        #   - 'PASSWORD'
-        #
-        # Nota: La opción 'return_attributes' es clave para obtener la información
-        # Es una lista de atributos a devolver. Por defecto devuelve los básicos.
-        # Si quieres atributos específicos (como "LASTLOGON"), debes especificarlos.
+        name: "*"
+        state: present
         return_attributes:
-          - 'ALL' # O puedes listar los que te interesen, como 'UID', 'HOME', 'LASTLOGON', 'DFLTGRP', etc.
+          - 'ALL'
 
-      register: racf_users_info # Registra la salida del módulo en esta variable
+      register: racf_users_info
 
     - name: Mostrar nombres de usuario y UIDs (o otros atributos)
       ansible.builtin.debug:
@@ -30,7 +20,7 @@
           UID: {{ item.attributes.UID | default('N/A') }}
           Default Group: {{ item.attributes.DFLTGRP | default('N/A') }}
           Last Logon: {{ item.attributes.LASTLOGON | default('N/A') }}
-          Otras Propiedades: {{ item.attributes | to_nice_json(indent=2) }} # Muestra todos los atributos
+          Otras Propiedades: {{ item.attributes | to_nice_json(indent=2) }}
       loop: "{{ racf_users_info.users }}"
       when: racf_users_info.users is defined and racf_users_info.users | length > 0
 
