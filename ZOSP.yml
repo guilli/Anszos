@@ -1,1 +1,7 @@
-
+---
+name: Ping al servidor remoto
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ejecutar ping
+      ansible.builtin.ping:
