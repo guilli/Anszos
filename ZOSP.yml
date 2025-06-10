@@ -1,5 +1,5 @@
 ---
-name: Ping al servidor remoto
+- name: Ping al servidor remoto
   hosts: all
   gather_facts: no
   tasks:
