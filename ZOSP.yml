@@ -1,6 +1,6 @@
 ---
 - name: Ping al servidor remoto
-  hosts: all
+  hosts: ZOS
   gather_facts: no
   tasks:
     - name: Ejecutar ping
