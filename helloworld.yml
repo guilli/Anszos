@@ -1,5 +1,5 @@
 - name: Hola Mundo
-  hosts: localhost
+  hosts: ZOS
   gather_facts: false
   tasks:
     - name: Decir hola
