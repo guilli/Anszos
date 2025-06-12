@@ -1,0 +1,7 @@
+- name: Hola Mundo
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Decir hola
+      debug:
+        msg: "Hola desde AWX en localhost"
