@@ -1,7 +1,7 @@
 ---
 # Este playbook se conecta a un sistema z/OS y ejecuta el comando LISTUSER de RACF.
 - name: Listar información de usuario RACF
-  hosts: zos_systems # Asegúrate de que 'zos_systems' coincida con tu grupo de hosts en el inventario de AWX
+  hosts: 10.10.230.225 # Asegúrate de que 'zos_systems' coincida con tu grupo de hosts en el inventario de AWX
   gather_facts: false # No es necesario recolectar facts del sistema z/OS para esta tarea
 
   vars:
