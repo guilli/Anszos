@@ -4,4 +4,4 @@
   tasks:
     - name: Decir hola
       debug:
-        msg: "Hola desde AWX en localhost"
+        msg: "Hola desde AWX en {{ ansible_hostname }}"
