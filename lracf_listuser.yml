@@ -5,10 +5,7 @@
   gather_facts: false # No es necesario recolectar facts del sistema z/OS para esta tarea
 
   vars:
-    # Define una variable para el usuario RACF a consultar.
-    # Esta variable puede ser sobreescrita por 'extra_vars' al lanzar el job template en AWX.
-    racf_user_to_list: "YOURUSER" # <<-- ¡CAMBIA ESTO O PÁSALO COMO EXTRA_VAR!
-
+        racf_user_to_list: "YOURUSER" 
   tasks:
     - name: Ejecutar comando LISTUSER en z/OS
       # Usamos el módulo zos_tso_command de la colección ibm.ibm_zos_core
@@ -18,8 +15,7 @@
         command: "LISTUSER {{ racf_user_to_list }}"
         # Indicar que la salida de la consola debe ser capturada.
         # Esto es importante para ver el resultado del comando.
-        wait: true # Esperar a que el comando termine
-        max_response_time: 30 # Tiempo máximo de espera en segundos para la respuesta
+        
       register: racf_output # Almacena la salida del comando en una variable llamada 'racf_output'
       environment: # <--- ¡AÑADIR ESTO!
         LIBPATH: "/usr/lpp/IBM/zoautil/lib:${LIBPATH}" # <--- ¡Y ESTO!
