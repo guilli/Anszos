@@ -4,13 +4,23 @@
   gather_facts: no
   collections:
     - ibm.ibm_zos_core
-
+    
+  vars:
+      zosmf_url: "https://10.10.130.225:10443" # Se puede obtener de las variables del inventario o credencial
+      zosmf_user: "UAA0108"
+      zosmf_password: "BBB1974"
+    
   tasks:
     - name: Leer contenido del dataset
       zos_fetch:
         src: "MY.USER.DATA"
         dest: "./descargas/"
         is_binary: false
+        
+        zosmf_host: "{{ zosmf_url }}"
+        zosmf_user: "{{ zosmf_user }}"
+        zosmf_password: "{{ zosmf_password }}"
+        
       register: resultado
 
     - name: Mostrar ruta del archivo descargado
