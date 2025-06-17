@@ -1,0 +1,11 @@
+- name: Ejemplo con z/OS
+  hosts: all
+  gather_facts: no
+  collections:
+    - ibm.ibm_zos_core
+
+  tasks:
+    - name: Mostrar data set
+      zos_data_set:
+        name: 'MY.DATA.SET'
+        state: cataloged
