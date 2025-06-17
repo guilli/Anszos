@@ -1,11 +1,18 @@
-- name: Ejemplo con z/OS
-  hosts: all
+---
+- name: Leer dataset en z/OS
+  hosts: zos
   gather_facts: no
   collections:
     - ibm.ibm_zos_core
 
   tasks:
-    - name: Mostrar data set
-      zos_data_set:
-        name: 'MY.DATA.SET'
-        state: cataloged
+    - name: Leer contenido del dataset
+      zos_fetch:
+        src: "MY.USER.DATA"
+        dest: "./descargas/"
+        is_binary: false
+      register: resultado
+
+    - name: Mostrar ruta del archivo descargado
+      debug:
+        msg: "Archivo descargado en: {{ resultado.dest }}"
