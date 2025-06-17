@@ -1,6 +1,6 @@
 ---
 - name: Leer dataset en z/OS
-  hosts: zos
+  hosts:  10.10.130.225
   gather_facts: no
   collections:
     - ibm.ibm_zos_core
