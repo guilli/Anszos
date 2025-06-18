@@ -2,12 +2,18 @@
 - hosts: 10.10.130.225
   gather_facts: no
   environment:
-    # Corrected LIBPATH: Added /usr/lpp/
-    LIBPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
-    # PATH was already correct
-    PATH: "/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
-    # Corrected PYTHONPATH: Added /usr/lpp/
-    PYTHONPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH | default('') }}"
+    # Set the Python Home to the actual 3.11 installation
+    PYTHON_HOME: "/Z31A/usr/lpp/IBM/cyp/pyz"
+
+    # Add Python 3.11 paths to LIBPATH, PATH, PYTHONPATH
+    # Prepend them to ensure they are found first
+    LIBPATH: "{{ PYTHON_HOME }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
+    PATH: "{{ PYTHON_HOME }}/bin:/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
+    PYTHONPATH: "{{ PYTHON_HOME }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH | default('') }}"
+
+    # If ZOAU_HOME is needed separately for other scripts, you can keep it
+    ZOAU_HOME: "/Z31A/usr/lpp/IBM/zoautil"
+
   tasks:
     - name: Probar ZOAU con listado de datasets
       ibm.ibm_zos_core.zos_tso_command:
