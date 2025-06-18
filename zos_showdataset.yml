@@ -2,9 +2,9 @@
 -  hosts: 10.10.130.225
    gather_facts: no
    environment:
-     LIBPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH }}"
-     PATH: "/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH }}"
-     PYTHONPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH }}"
+     LIBPATH: "/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH }}"
+     PATH: "/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH }}"
+     PYTHONPATH: "/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH }}"
    tasks:
      - name: Probar ZOAU con listado de datasets
        ibm.ibm_zos_core.zos_tso_command:
