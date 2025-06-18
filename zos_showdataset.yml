@@ -1,43 +1,12 @@
 ---
-- name: Leer dataset en z/OS sin ibm.zos_core (via z/OSMF REST API)
-  hosts: localhost # La tarea se ejecuta en la controladora de Ansible
-  gather_facts: no
-
-  vars:
-    zosmf_base_url: "https://10.10.130.225:10443"
-    zosmf_user: "UAA0108"
-    zosmf_password: "BBB1974"
-    dataset_name: "MY.USER.DATA"
-
-  tasks:
-    - name: Autenticar y obtener token de z/OSMF (si es necesario y no usas credenciales basicas)
-      # Nota: Muchos módulos z/OSMF REST pueden requerir autenticación previa o tokens
-      # Para simplificar, asumiremos autenticación básica o que el entorno de AWX
-      # ya maneja la autenticación si configuras las credenciales en la plantilla.
-      # Para URI, puedes usar `url_username` y `url_password` para autenticación básica.
-      # O si z/OSMF usa tokens, tendrías una tarea previa para obtener el token y luego usarlo en los headers.
-      debug:
-        msg: "Asumiendo autenticación básica o pre-configurada."
-
-    - name: Obtener contenido del dataset a traves de la API REST de z/OSMF
-      ansible.builtin.uri:
-        url: "{{ zosmf_base_url }}/zosmf/restfiles/ds/{{ dataset_name }}"
-        method: GET
-        user: "{{ zosmf_user }}"
-        password: "{{ zosmf_password }}"
-        validate_certs: false # Cuidado con esto en producción
-        return_content: yes
-        headers:
-          Content-Type: "application/json" # O text/plain, depende del tipo de contenido esperado
-      register: zosmf_response
-      failed_when: zosmf_response.status not in [200, 204] # 200 OK, 204 No Content (si está vacío)
-
-    - name: Mostrar el contenido del dataset
-      debug:
-        msg: "Contenido del dataset: {{ zosmf_response.content | default('No content or error in response') }}"
-
-    - name: Guardar el contenido en un archivo local (opcional)
-      ansible.builtin.copy:
-        content: "{{ zosmf_response.content }}"
-        dest: "./descargas/{{ dataset_name | lower | replace('.', '_') }}.txt" # Ajusta el nombre del archivo
-      when: zosmf_response.content is defined and zosmf_response.content | length > 0
+-  hosts: 10.10.130.225
+   gather_facts: no
+   environment:
+     LIBPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH }}"
+     PATH: "/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH }}"
+     PYTHONPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH }}"
+   tasks:
+     - name: Probar ZOAU con listado de datasets
+       ibm.ibm_zos_core.zos_tso_command:
+         commands:
+           - LISTDS 'SYS1.PARMLIB'
