@@ -1,12 +1,15 @@
 ---
--  hosts: 10.10.130.225
-   gather_facts: no
-   environment:
-     LIBPATH: "/Z31A/IBM/zoautil/lib:{{ ansible_env.LIBPATH }}"
-     PATH: "/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH }}"
-     PYTHONPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH }}"
-   tasks:
-     - name: Probar ZOAU con listado de datasets
-       ibm.ibm_zos_core.zos_tso_command:
-         commands:
-           - LISTDS 'SYS1.PARMLIB'
+- hosts: 10.10.130.225
+  gather_facts: no
+  environment:
+    # Corrected LIBPATH: Added /usr/lpp/
+    LIBPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
+    # PATH was already correct
+    PATH: "/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
+    # Corrected PYTHONPATH: Added /usr/lpp/
+    PYTHONPATH: "/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH | default('') }}"
+  tasks:
+    - name: Probar ZOAU con listado de datasets
+      ibm.ibm_zos_core.zos_tso_command:
+        commands:
+          - LISTDS 'SYS1.PARMLIB'
