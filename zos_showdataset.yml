@@ -3,7 +3,7 @@
 
   vars:
     python_home: "/Z31A/usr/lpp/IBM/cyp/pyz"
-    zoau_home: "/Z31A/usr/lpp/IBM/zoautil"
+    zoau_home: "/Z31A/usr/lpp/IBM/zoautil"   # Solo para PATH/otros, no para PYTHONPATH
 
   environment:
     PYTHON_HOME: "{{ python_home }}"
@@ -11,8 +11,7 @@
     LC_ALL: "C"
 
     PYTHONPATH: >
-    {{ python_home }}/lib/python3.11/site-packages
-    :{{ zoau_home }}/lib
+      {{ python_home }}/lib/python3.11/site-packages
 
     LIBPATH: "{{ python_home }}/lib:{{ zoau_home }}/lib:/lib:/usr/lib:{{ ansible_env.LIBPATH | default('') }}"
 
@@ -21,6 +20,19 @@
     ZOAU_HOME: "{{ zoau_home }}"
 
   tasks:
+    - name: Verificar que zoautil_py.gdgs está importable
+      shell: >
+        {{ python_home }}/bin/python3 - << 'EOF'
+        import zoautil_py
+        print("gdgs" in dir(zoautil_py))
+        EOF
+      register: zoau_check
+      changed_when: false
+
+    - name: Mostrar resultado de la verificación
+      debug:
+        var: zoau_check.stdout_lines
+
     - name: Fetching SYS1.PARMLIB to control node
       ibm.ibm_zos_core.zos_fetch:
         src: "SYS1.PARMLIB"
