@@ -17,6 +17,7 @@
         src: "SYS1.PARMLIB"
         location: DATA_SET
         flat: true
+         dest: "./descarga_parmlib"
       register: dataset_content
 
     - debug:
