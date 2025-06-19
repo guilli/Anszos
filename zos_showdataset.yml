@@ -1,17 +1,14 @@
----
 - hosts: 10.10.130.225
   gather_facts: no
-  environment:
-    # Set the Python Home to the actual 3.11 installation
-    PYTHON_HOME: "/Z31A/usr/lpp/IBM/cyp/pyz"
 
-    # Add Python 3.11 paths to LIBPATH, PATH, PYTHONPATH
-    # Prepend them to ensure they are found first
-    LIBPATH: "{{ PYTHON_HOME }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
-    PATH: "{{ PYTHON_HOME }}/bin:/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
-    # PYTHONPATH: "{{ PYTHON_HOME }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.PYTHONPATH | default('') }}"
+  vars:
+    python_home: "/Z31A/usr/lpp/IBM/cyp/pyz"
+
+  environment:
+    PYTHON_HOME: "{{ python_home }}"
+    LIBPATH: "{{ python_home }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
+    PATH: "{{ python_home }}/bin:/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
     PYTHONPATH: "/Z31A/usr/lpp/IBM/cyp/pyz"
-    # If ZOAU_HOME is needed separately for other scripts, you can keep it
     ZOAU_HOME: "/Z31A/usr/lpp/IBM/zoautil"
 
   tasks:
@@ -19,3 +16,4 @@
       ibm.ibm_zos_core.zos_tso_command:
         commands:
           - LISTDS 'SYS1.PARMLIB'
+
