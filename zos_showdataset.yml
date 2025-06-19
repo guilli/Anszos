@@ -11,8 +11,8 @@
     LC_ALL: "C"
 
     PYTHONPATH: >
-      {{ python_home }}/lib/python3.11/site-packages
-      :{{ zoau_home }}/lib64/python3.11/site-packages
+    {{ python_home }}/lib/python3.11/site-packages
+    :{{ zoau_home }}/lib
 
     LIBPATH: "{{ python_home }}/lib:{{ zoau_home }}/lib:/lib:/usr/lib:{{ ansible_env.LIBPATH | default('') }}"
 
