@@ -3,24 +3,37 @@
 
   vars:
     python_home: "/Z31A/usr/lpp/IBM/cyp/pyz"
+    zoau_home: "/Z31A/usr/lpp/IBM/zoautil" # Define ZOAU_HOME as a var for consistency
 
   environment:
     PYTHON_HOME: "{{ python_home }}"
     LANG: "C"
     LC_ALL: "C"
-    LIBPATH: "{{ python_home }}/lib:/Z31A/usr/lpp/IBM/zoautil/lib:{{ ansible_env.LIBPATH | default('') }}"
-    PATH: "{{ python_home }}/bin:/Z31A/usr/lpp/IBM/zoautil/bin:{{ ansible_env.PATH | default('') }}"
-    PYTHONPATH: "/Z31A/usr/lpp/IBM/cyp/pyz"
-    ZOAU_HOME: "/Z31A/usr/lpp/IBM/zoautil"
+    # Ensure standard system binary paths are first in LIBPATH
+    LIBPATH: "{{ python_home }}/lib:{{ zoau_home }}/lib:/lib:/usr/lib:{{ ansible_env.LIBPATH | default('') }}" # Added /lib and /usr/lib
+
+    # *** FIX: Add /bin and /usr/bin to the beginning of the PATH ***
+    PATH: "/bin:/usr/bin:{{ python_home }}/bin:{{ zoau_home }}/bin:{{ ansible_env.PATH | default('') }}"
+
+    # Revisit PYTHONPATH: It typically points to module directories, not the Python installation root.
+    # For ZOAU Python bindings, it should point to where zoautil_py.so or zoautil_py.pyc is.
+    # This is often within ZOAU_HOME/lib or ZOAU_HOME/python
+    # A safer default if you're unsure: leave it out, or set to ZOAU_HOME/lib if that's where the bindings are.
+    # PYTHONPATH: "{{ zoau_home }}/lib" # If zoautil_py is directly here
+    # PYTHONPATH: "{{ ansible_env.PYTHONPATH | default('') }}" # Best to inherit if already set on z/OS
+    # For now, let's remove it if it's causing issues, as it's not always strictly required for ZOAU
+    # if the bindings are correctly installed within the Python environment.
+
+    ZOAU_HOME: "{{ zoau_home }}" # Use the var here for consistency
 
   tasks:
-    - name: Listar miembros del dataset
+    - name: Fetching SYS1.PARMLIB to control node
       ibm.ibm_zos_core.zos_fetch:
         src: "SYS1.PARMLIB"
-        flat: true
-        dest: "./descarga_parmlib"
+        flat: false # Set to false if fetching an entire PDS like PARMLIB
+        dest: "./download_parmlib_dir" # Change to a directory name for the fetched PDS
       register: dataset_content
 
-    - name: Mostrar resultado de la descarga
+    - name: Show fetch results
       debug:
         var: dataset_content
