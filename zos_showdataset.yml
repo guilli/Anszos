@@ -11,18 +11,19 @@
     PYTHONPATH: "/Z31A/usr/lpp/IBM/cyp/pyz"
     ZOAU_HOME: "/Z31A/usr/lpp/IBM/zoautil"
 
-  tasks:
+ tasks:
     - name: Listar miembros del dataset
       ibm.ibm_zos_core.zos_fetch:
         src: "SYS1.PARMLIB"
         location: DATA_SET
         flat: true
-         dest: "./descarga_parmlib"
+        dest: "./descarga_parmlib"
       register: dataset_content
 
     - debug:
         var: dataset_content
 
+        
 #    - name: Probar ZOAU con listado de datasets
 #      ibm.ibm_zos_core.zos_tso_command:
 #        commands:
