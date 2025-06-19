@@ -17,15 +17,10 @@
     - name: Listar miembros del dataset
       ibm.ibm_zos_core.zos_fetch:
         src: "SYS1.PARMLIB"
-       # location: DATA_SET
         flat: true
         dest: "./descarga_parmlib"
       register: dataset_content
 
-    - debug:
+    - name: Mostrar resultado de la descarga
+      debug:
         var: dataset_content
-
-#    - name: Probar ZOAU con listado de datasets
-#      ibm.ibm_zos_core.zos_tso_command:
-#        commands:
-#          - LISTDS 'SYS1.PARMLIB'
