@@ -9,22 +9,17 @@
     PYTHON_HOME: "{{ python_home }}"
     LANG: "C"
     LC_ALL: "C"
-
     PYTHONPATH: "{{ python_home }}/lib/python3.11/site-packages"
-
     LIBPATH: >
       {{ python_home }}/lib:{{ zoau_home }}/lib:/lib:/usr/lib:{{ ansible_env.LIBPATH | default('') }}
-
     PATH: >
       /bin:/usr/bin:{{ python_home }}/bin:{{ zoau_home }}/bin:{{ ansible_env.PATH | default('') }}
-
     ZOAU_HOME: "{{ zoau_home }}"
 
   tasks:
-
     - name: Verificar que zoautil_py.gdgs está importable
       shell: >
-         {{ python_home }}/bin/python3 -c "from zoautil_py import gdgs"
+        {{ python_home }}/bin/python3 -c "from zoautil_py import gdgs"
       register: zoau_check
       failed_when: false
       changed_when: false
@@ -32,12 +27,10 @@
     - name: Mostrar resultado de la verificación
       debug:
         var: zoau_check.stderr_lines
-    
-    
-    
-     - name: Verificar si 'gdgs' está presente en dir(zoautil_py)
+
+    - name: Verificar si 'gdgs' está presente en dir(zoautil_py)
       shell: >
-         {{ python_home }}/bin/python3 -c "import zoautil_py; print('gdgs' in dir(zoautil_py))"
+        {{ python_home }}/bin/python3 -c "import zoautil_py; print('gdgs' in dir(zoautil_py))"
       register: zoau_check_dir
       changed_when: false
 
