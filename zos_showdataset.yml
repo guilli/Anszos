@@ -21,6 +21,20 @@
     ZOAU_HOME: "{{ zoau_home }}"
 
   tasks:
+
+    - name: Verificar que zoautil_py.gdgs está importable
+      shell: >
+         {{ python_home }}/bin/python3 -c "from zoautil_py import gdgs"
+      register: zoau_check
+      failed_when: false
+      changed_when: false
+
+    - name: Mostrar resultado de la verificación
+      debug:
+        var: zoau_check.stderr_lines
+    
+    
+    
     - name: Verificar que zoautil_py.gdgs está importable
       shell: >
         {{ python_home }}/bin/python3 -c "import zoautil_py; print('gdgs' in dir(zoautil_py))"
