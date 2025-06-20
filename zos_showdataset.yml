@@ -37,13 +37,13 @@
     
      - name: Verificar si 'gdgs' está presente en dir(zoautil_py)
       shell: >
-        {{ python_home }}/bin/python3 -c "import zoautil_py; print('gdgs' in dir(zoautil_py))"
+         {{ python_home }}/bin/python3 -c "import zoautil_py; print('gdgs' in dir(zoautil_py))"
       register: zoau_check_dir
       changed_when: false
 
     - name: Mostrar resultado de dir() sobre zoautil_py
       debug:
-      var: zoau_check_dir.stdout_lines
+        var: zoau_check_dir.stdout_lines
 
     - name: Fetching SYS1.PARMLIB to control node
       ibm.ibm_zos_core.zos_fetch:
